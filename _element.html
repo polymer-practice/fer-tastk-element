@@ -1,0 +1,36 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="fer-task-element">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <h2>Hello [[prop1]]!</h2>
+  </template>
+
+  <script>
+    /**
+     * `fer-task-element`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class FerTaskElement extends Polymer.Element {
+      static get is() { return 'fer-task-element'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'fer-task-element'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(FerTaskElement.is, FerTaskElement);
+  </script>
+</dom-module>
