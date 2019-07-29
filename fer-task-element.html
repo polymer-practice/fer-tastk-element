@@ -7,9 +7,17 @@
       :host {
         display: block;
       }
+        .canceled {
+            color:red;
+        }
+        .done {
+            color:green;
+            text-decoration:line-through;
+        }
     </style>
-
-      <iron-icon icon="icons:radio-button-checked"></iron-icon> [[prop1]]
+      <div class="task-element" class$="[[checkStatus]]">
+          <iron-icon icon="icons:radio-button-checked"></iron-icon> [[title]]
+      </div>
   </template>
 
   <script>
@@ -18,12 +26,32 @@
       static get is() { return 'fer-task-element'; }
       static get properties() {
         return {
-          prop1: {
+          title: {
             type: String,
             value: 'ALOHA!!!'
+          },
+          key: Number,
+          canceled:Boolean,
+          done: Boolean,
+          checkStatus: {
+            type: Boolean,
+            computed: 'getResult(done,canceled)'
           }
         };
       }
+
+      getResult (done,canceled)  {
+        let result = "pending"
+
+        if (canceled)
+         result = "canceled"
+
+        if (done)
+          result = "done"
+
+        console.log(result)
+        return result
+    }
     }
 
     window.customElements.define(FerTaskElement.is, FerTaskElement);
