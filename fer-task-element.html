@@ -87,13 +87,13 @@
                 <span class="title">[[title]]</span>
             </div>
             <span class="button-set">
-                <template is=”dom-if” if=[[isReady]]>
+                <template is=”dom-if” if=[[isPending]]>
                     <button type="button" name="pending" on-click="onButton" class="btn btn-pending">Set pending</button>
                 </template>
-                <template is=”dom-if” if=[[isReady]]>
+                <template is=”dom-if” if=[[isDone]]>
                     <button type="button" name="done" on-click="onButton" class="btn btn-done">Set done</button>
                 </template>
-                <template is=”dom-if” if=[[isReady]]>
+                <template is=”dom-if” if=[[isCancel]]>
                     <button type="button" name="cancel" on-click="onButton" class="btn btn-cancel">Set cancel</button>
                 </template>
       </span>
@@ -113,7 +113,14 @@
             key: Number,
             cancel: Boolean,
             done: Boolean,
-            isReady: {
+            isPending: {
+              type: Boolean,
+              value: true
+            },isDone: {
+              type: Boolean,
+              value: true
+            },
+            isCancel: {
               type: Boolean,
               value: true
             },
@@ -128,11 +135,15 @@
         getState (done, cancel) {
           let result = 'pending'
           if (cancel) {
-            this.isReady = false
+            this.isCancel = false
+            this.isDone = true
+            this.isPending = true
             result = 'cancel'
           }
           if (done) {
-            this.isReady = false
+            this.isCancel = true
+            this.isDone = false
+            this.isPending = true
             result = 'done'
           }
           return result
