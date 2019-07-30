@@ -87,16 +87,16 @@
                 <span class="title">[[title]]</span>
             </div>
             <span class="button-set">
-                <template is=”dom-if” if=[[isPending]]>
+                <template is="dom-if" if=[[showPending]]>
                     <button type="button" name="pending" on-click="onButton" class="btn btn-pending">Set pending</button>
                 </template>
-                <template is=”dom-if” if=[[isDone]]>
+                <template is="dom-if" if=[[showDone]]>
                     <button type="button" name="done" on-click="onButton" class="btn btn-done">Set done</button>
                 </template>
-                <template is=”dom-if” if=[[isCancel]]>
+                <template is="dom-if" if=[[showCancel]]>
                     <button type="button" name="cancel" on-click="onButton" class="btn btn-cancel">Set cancel</button>
                 </template>
-      </span>
+            </span>
         </div>
     </template>
 
@@ -113,14 +113,14 @@
             key: Number,
             cancel: Boolean,
             done: Boolean,
-            isPending: {
+            showPending: {
               type: Boolean,
-              value: true
-            },isDone: {
+              value: false
+            },showDone: {
               type: Boolean,
               value: true
             },
-            isCancel: {
+            showCancel: {
               type: Boolean,
               value: true
             },
@@ -135,15 +135,15 @@
         getState (done, cancel) {
           let result = 'pending'
           if (cancel) {
-            this.isCancel = false
-            this.isDone = true
-            this.isPending = true
+            this.showCancel = false
+            this.showDone = true
+            this.showPending = true
             result = 'cancel'
           }
           if (done) {
-            this.isCancel = true
-            this.isDone = false
-            this.isPending = true
+            this.showCancel = true
+            this.showDone = false
+            this.showPending = true
             result = 'done'
           }
           return result
