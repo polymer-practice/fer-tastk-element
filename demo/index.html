@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
@@ -13,21 +13,29 @@
     <link rel="import" href="../fer-task-element.html">
 
     <custom-style>
-      <style is="custom-style" include="demo-pages-shared-styles">
-      </style>
+        <style is="custom-style" include="demo-pages-shared-styles">
+        </style>
     </custom-style>
-  </head>
-  <body>
-    <div class="vertical-section-container centered">
-      <h3>Basic fer-task-element demo</h3>
-      <demo-snippet>
+</head>
+<body>
+<div class="vertical-section-container centered">
+    <h3>Basic fer-task-element demo</h3>
+    <demo-snippet>
         <template>
-            <fer-task-element title="Cocinar" key="1" done></fer-task-element>
-            <fer-task-element title="Dormir" key="1" canceled></fer-task-element>
-            <fer-task-element title="Planchar" key="1" ></fer-task-element>
-            <fer-task-element title="Comprar" key="1" done canceled></fer-task-element>
+            <div id="set-tasks">
+                <fer-task-element title="Learn Polymer 2" key=0></fer-task-element>
+                <fer-task-element title="Learn English" key=1 done></fer-task-element>
+                <fer-task-element title="Make the lunch" key=2 cancel></fer-task-element>
+                <fer-task-element title="Go shopping" key=3 done cancel></fer-task-element>
+            </div>
         </template>
-      </demo-snippet>
-    </div>
-  </body>
+        <script>
+          const setTasks = document.getElementById('set-tasks')
+          setTasks.addEventListener('pending-event', (event) => console.log(event.detail))
+          setTasks.addEventListener('done-event', (event) => console.log(event.detail))
+          setTasks.addEventListener('cancel-event', (event) => console.log(event.detail))
+        </script>
+    </demo-snippet>
+</div>
+</body>
 </html>

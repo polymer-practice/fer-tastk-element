@@ -2,58 +2,172 @@
 <link rel="import" href="../iron-icons/iron-icons.html">
 
 <dom-module id="fer-task-element">
-  <template>
-    <style>
-      :host {
-        display: block;
-      }
-        .canceled {
-            color:red;
-        }
-        .done {
-            color:green;
-            text-decoration:line-through;
-        }
-    </style>
-      <div class="task-element" class$="[[checkStatus]]">
-          <iron-icon icon="icons:radio-button-checked"></iron-icon> [[title]]
-      </div>
-  </template>
+    <template>
+        <style>
+            :host {
+                display: block;
+                --task-element-primary-color: var(--primary-color, blue);
+                --task-element-done-color: var(--done-color, green);
+                --task-element-cancel-color: var(--cancel-color, red);
+                --task-element-height-btn: var(--height-btn, 35px);
+                --task-element-width-btn: var(--width-btn, 80px);
+            }
 
-  <script>
+            .task-element {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+            }
 
-    class FerTaskElement extends Polymer.Element {
-      static get is() { return 'fer-task-element'; }
-      static get properties() {
-        return {
-          title: {
-            type: String,
-            value: 'ALOHA!!!'
-          },
-          key: Number,
-          canceled:Boolean,
-          done: Boolean,
-          checkStatus: {
-            type: Boolean,
-            computed: 'getResult(done,canceled)'
+            .task-desc {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 5px 0px;
+            }
+
+            .bullet {
+                margin-right: 5px;
+            }
+
+            .pending {
+                color: var(--task-element-primary-color);
+            }
+
+            .done {
+                text-decoration: line-through;
+                color: var(--task-element-done-color);
+            }
+
+            .cancel {
+                text-decoration: line-through;
+                color: var(--task-element-cancel-color);
+            }
+
+            .button-set {
+                display: flex;
+                align-items: center;
+            }
+
+            .btn {
+                height: var(--task-element-height-btn);
+                width: var(--task-element-width-btn);
+                color: white;
+                border-radius: 4px;
+                border-style: none;
+                margin: 1%;
+                padding: 0;
+            }
+
+            .btn-pending {
+                background-color: var(--task-element-primary-color);
+            }
+
+            .btn-done {
+                background-color: var(--task-element-done-color);
+            }
+
+            .btn-cancel {
+                background-color: var(--task-element-cancel-color);
+            }
+
+            @media (min-width: 600px) {
+                .task-element {
+                    flex-direction: row;
+                }
+
+                .button-set {
+                    margin-left: auto;
+                }
+            }
+        </style>
+        <div class="task-element">
+            <div class$="task-desc [[state]]">
+                <iron-icon icon="icons:radio-button-checked" class="bullet"></iron-icon>
+                <span class="title">[[title]]</span>
+            </div>
+            <span class="button-set">
+                <template is=”dom-if” if=[[isReady]]>
+                    <button type="button" name="pending" on-click="onButton" class="btn btn-pending">Set pending</button>
+                </template>
+                <template is=”dom-if” if=[[isReady]]>
+                    <button type="button" name="done" on-click="onButton" class="btn btn-done">Set done</button>
+                </template>
+                <template is=”dom-if” if=[[isReady]]>
+                    <button type="button" name="cancel" on-click="onButton" class="btn btn-cancel">Set cancel</button>
+                </template>
+      </span>
+        </div>
+    </template>
+
+    <script>
+
+      class FerTaskElement extends Polymer.Element {
+        static get is () {
+          return 'fer-task-element'
+        }
+
+        static get properties () {
+          return {
+            title: String,
+            key: Number,
+            cancel: Boolean,
+            done: Boolean,
+            isReady: {
+              type: Boolean,
+              value: true
+            },
+            state: {
+              type: String,
+              value: 'pending',
+              computed: 'getState(done,cancel)'
+            }
           }
-        };
+        }
+
+        getState (done, cancel) {
+          let result = 'pending'
+          if (cancel) {
+            this.isReady = false
+            result = 'cancel'
+          }
+          if (done) {
+            this.isReady = false
+            result = 'done'
+          }
+          return result
+        }
+
+        onButton (event) {
+          const buttonType = event.target.getAttribute('name')
+          let typeCustomEvent
+          let customEvent
+          switch (buttonType) {
+            case 'pending':
+              typeCustomEvent = 'pending-event'
+              break
+            case 'done':
+
+              typeCustomEvent = 'done-event'
+              break
+            case 'cancel':
+              typeCustomEvent = 'cancel-event'
+              break
+          }
+          customEvent = new CustomEvent(
+            typeCustomEvent,
+            {
+              bubbles: true,
+              composed: true,
+              detail: {
+                key: this.key
+              }
+            }
+          )
+          this.dispatchEvent(customEvent)
+        }
       }
 
-      getResult (done,canceled)  {
-        let result = "pending"
-
-        if (canceled)
-         result = "canceled"
-
-        if (done)
-          result = "done"
-
-        console.log(result)
-        return result
-    }
-    }
-
-    window.customElements.define(FerTaskElement.is, FerTaskElement);
-  </script>
+      window.customElements.define(FerTaskElement.is, FerTaskElement)
+    </script>
 </dom-module>
